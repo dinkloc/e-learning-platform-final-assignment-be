@@ -2,9 +2,12 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
+import { ConfigService } from './common/services/config.service';
+import { DatabaseModule } from './database/database.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService: ConfigService = app.get(ConfigService);
 
   const config = new DocumentBuilder()
     .setTitle('Final Assignment E-Learning Platform BE')
@@ -15,7 +18,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  console.log("Prepare connect to port 3000")
+  const databaseModule: DatabaseModule = new DatabaseModule();
+  await databaseModule.runMigrations(configService);
 
   await app.listen(3000);
 }

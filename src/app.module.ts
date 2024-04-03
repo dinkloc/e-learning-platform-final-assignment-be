@@ -1,23 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Poll } from './poll/poll.entity';
-import { PollService } from './poll/poll.service';
-import { PollController } from './poll/poll.controller';
+import { DatabaseModule } from './database/database.module';
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'postgres',
-      database: 'db-elearning',
-      entities: [Poll],
-      synchronize: true,
-    }),
-    TypeOrmModule.forFeature([Poll]),
+    DatabaseModule
   ],
-  providers: [PollService],
-  controllers: [PollController],
 })
-export class AppModule { }
+export class AppModule {}
