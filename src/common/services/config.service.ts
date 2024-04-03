@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as Joi from '@hapi/joi';
 
 export interface EnvConfig {
-  [k : string] : string
+  [k: string]: string;
 }
 
 export interface DBConfig {
@@ -22,8 +22,8 @@ export class ConfigService {
     DB_PORT: Joi.number().required(),
     DB_USER: Joi.string().required(),
     DB_PASS: Joi.string().required(),
-    DB_NAME: Joi.string().required()
-  }
+    DB_NAME: Joi.string().required(),
+  };
 
   constructor(filePath: string) {
     const config = dotenv.parse(fs.readFileSync('.env'));

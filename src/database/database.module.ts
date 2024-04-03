@@ -1,8 +1,8 @@
 import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
 import { join } from 'path';
 import { Connection, createConnection } from 'typeorm';
+
 import { CommonModule } from '../common/common.module';
 import { ConfigService } from '../common/services/config.service';
 
@@ -31,20 +31,19 @@ import { ConfigService } from '../common/services/config.service';
           migrationsDir: 'src/database/migrations',
         },
       }),
-    })
+    }),
   ],
   providers: [],
-  exports: []
+  exports: [],
 })
-
 export class DatabaseModule {
   public async runMigrations(configService: ConfigService) {
     const connection: Connection = await createConnection({
-      type: "postgres",
+      type: 'postgres',
       host: 'localhost',
       port: 5555,
       username: 'dinhloc',
-      password: "dinhloc",
+      password: 'dinhloc',
       database: 'elearning',
     });
     return connection.runMigrations({ transaction: 'each' });
