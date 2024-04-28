@@ -1,7 +1,9 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { RegisterDTO } from './dto/user-login.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Post, Request, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { ChangePasswordDTO, LoginDTO, RegisterDTO } from './dto/user-login.dto';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './services/auth.service';
+import { ApiResult } from 'src/common/classes/api-result';
+import { AuthGuard } from './auth.guard';
 
 @ApiTags("Authentication")
 @Controller("auth")
@@ -11,22 +13,30 @@ export class AuthController {
   }
 
   @Post("/register")
+  @UsePipes(new ValidationPipe({ transform: true }))
+  @ApiOperation({
+    summary: 'Register by email ',
+  })
   async register(@Body() userRegister: RegisterDTO) {
-      await this.authService.register(userRegister);
+    const result = await this.authService.register(userRegister);
+    return new ApiResult().success(result);
   }
 
   @Post("/login")
-  async login() {
-
+  @UsePipes(new ValidationPipe({ transform: true }))
+  @ApiOperation({
+    summary: 'Login by email',
+  })
+  async login(@Body() userLogin: LoginDTO) {
+    const result = await this.authService.login(userLogin);
+    return new ApiResult().success(result);
   }
 
-  @Post("/forgot-password")
-  async forgotPassword() {
-
-  }
-
-  @Post("/reset-password")
-  async resetPassword() {
-
+  @UseGuards(AuthGuard)
+  @Post("/change-password")
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async forgotPassword(@Body() changePassword: ChangePasswordDTO, @Request() req) {
+    const result = await this.authService.changePassword(req.user);
+    return new ApiResult().success(result);
   }
 }

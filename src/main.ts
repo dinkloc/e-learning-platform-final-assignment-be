@@ -12,6 +12,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Final Assignment E-Learning Platform BE')
     .setDescription('API docs Final Assignment E-Learning Platform BE')
+    .addBearerAuth()
     .setVersion('1.0')
     .addTag('BE')
     .build();
@@ -21,7 +22,7 @@ async function bootstrap() {
   const databaseModule: DatabaseModule = new DatabaseModule();
   await databaseModule.runMigrations(configService);
 
-  await app.listen(3000);
+  await app.listen(5000);
 }
 
 bootstrap();

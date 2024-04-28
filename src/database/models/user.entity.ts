@@ -55,6 +55,10 @@ export class User {
   @ApiProperty()
   lastName: string;
 
+  @Column({ length: 100, default: '', nullable: true, name: 'user_name' })
+  @ApiProperty()
+  userName: string;
+
   @Column({ nullable: true })
   @ApiProperty()
   avatar: string;
