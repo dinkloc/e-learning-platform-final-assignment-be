@@ -22,6 +22,7 @@ async function bootstrap() {
   const databaseModule: DatabaseModule = new DatabaseModule();
   await databaseModule.runMigrations(configService);
 
+  app.enableCors();
   await app.listen(5000);
 }
 
