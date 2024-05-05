@@ -50,8 +50,26 @@ export class AuthService {
 
   }
 
+  // async test() {
+  //   const queryBuilder = this.userRepository.createQueryBuilder("u").select('u.*')
+
+  //   queryBuilder.orderBy('id', 'DESC').limit(2).offset(2);
+
+  //   const [result, count] = await Promise.all([
+  //     queryBuilder.getCount(),
+  //     queryBuilder.getRawMany()
+  //   ])
+
+  //   console.table(result);
+  //   console.log(count)
+  // }
+
+  async logout() {
+    return { user: null, token: "" }
+  }
+
   async changePassword(currentUser) {
-    console.log(currentUser);
+    // console.log(currentUser);
     const user = await this.userRepository.findOne({ where: { email: currentUser.email } });
     console.log(user);
   }

@@ -7,14 +7,13 @@ import {
   BeforeInsert,
   BeforeUpdate,
   OneToMany,
-  ManyToOne,
-  JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 import * as bcrypt from 'bcrypt';
 import { Exclude, Transform } from 'class-transformer';
 import * as moment from 'moment';
+import { Enrollment } from './enrollment.entity';
 
 export enum UserRole {
   ADMIN = 'ADMIN',
@@ -34,7 +33,7 @@ export enum UserStatus {
   DELETED = 'DELETED',
 }
 
-@Entity()
+@Entity('user')
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -46,6 +45,9 @@ export class User {
   @Column({ length: 255, nullable: true })
   @Exclude()
   password: string;
+
+  @OneToMany(() => Enrollment, enrollment => enrollment.user)
+  enrollments: Enrollment[];
 
   @Column({ length: 100, default: '', nullable: true, name: 'first_name' })
   @ApiProperty()
@@ -111,6 +113,8 @@ export class User {
   @Column({ name: 'is_first_login', type: 'boolean', default: true })
   @ApiProperty()
   isFirstLogin: boolean;
+
+
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword() {
@@ -120,7 +124,7 @@ export class User {
         const hash = await bcrypt.hash(this.password, salt);
         this.password = hash;
       } catch (error) {
-        // console.log(error);
+        console.log(error);
       }
     }
   }

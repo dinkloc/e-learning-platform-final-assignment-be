@@ -32,11 +32,27 @@ export class AuthController {
     return new ApiResult().success(result);
   }
 
+  // @UseGuards(AuthGuard)
+  @Post("/logout")
+  @UsePipes(new ValidationPipe({ transform: true }))
+  @ApiOperation({
+    summary: "User Logout"
+  })
+  async logout() {
+    const result = await this.authService.logout();
+
+    return new ApiResult().success(result);
+  }
+
   @UseGuards(AuthGuard)
   @Post("/change-password")
   @UsePipes(new ValidationPipe({ transform: true }))
-  async forgotPassword(@Body() changePassword: ChangePasswordDTO, @Request() req) {
-    const result = await this.authService.changePassword(req.user);
+  @ApiOperation({
+    summary: "Change Password"
+  })
+  async forgotPassword(@Body() changePassword: ChangePasswordDTO) {
+    const result = await this.authService.changePassword(changePassword);
+
     return new ApiResult().success(result);
   }
 }
