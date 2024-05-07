@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
-export class CommentService {
-    async getAllComment() {
+export class DiscussionService {
+    async getAllDiscussion() {
         return 'helloworld'
     }
 }

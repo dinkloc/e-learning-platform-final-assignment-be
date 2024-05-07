@@ -2,19 +2,18 @@ import { Controller, Get, Request, UseGuards } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 
 import { AuthGuard } from "src/auth/auth.guard";
-import { CommentService } from "./comment.service";
+import { DiscussionService } from "./discussion.service";
 import { ApiResult } from "src/common/classes/api-result";
 
-@ApiTags("Comment")
-@Controller("comment")
-export class CommentController {
-    constructor(private readonly commentService: CommentService) { }
+@ApiTags("Discussion")
+@Controller("discussion")
+export class DiscussionController {
+    constructor(private readonly DiscussionService: DiscussionService) { }
 
     @UseGuards(AuthGuard)
     @Get("/")
     async get(@Request() req) {
-        console.log(req.user);
-        const result = await this.commentService.getAllComment();
+        const result = await this.DiscussionService.getAllDiscussion();
         return new ApiResult().success(result);
     }
 }

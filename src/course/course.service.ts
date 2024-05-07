@@ -16,13 +16,13 @@ export class CourseService {
 
         const queryBuilder = this.courseRepository.createQueryBuilder('cs').select('cs.*');
 
-        queryBuilder.orderBy('created_at', "ASC").limit(coursesDto.limit).offset(coursesDto.offset)
+        queryBuilder.orderBy('course_id', "ASC").limit(coursesDto.limit).offset(coursesDto.offset)
 
         const [result, count] = await Promise.all([
             queryBuilder.getRawMany(),
             queryBuilder.getCount()
         ])
-
+2
         return {
             record: result,
             total: count
@@ -35,4 +35,5 @@ export class CourseService {
             throw new ApiError("Not Found Course")
         }
     }
+
 }

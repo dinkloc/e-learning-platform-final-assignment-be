@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { JwtService } from '@nestjs/jwt';
 
 import { User } from '../../database/models/user.entity';
 import { LoginDTO, RegisterDTO } from '../dto/user-login.dto';
 import { ApiError } from '../../common/classes/api-error';
 import { ErrorCode } from '../../common/constants/error';
-import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthService {
   constructor(
@@ -63,10 +63,6 @@ export class AuthService {
   //   console.table(result);
   //   console.log(count)
   // }
-
-  async logout() {
-    return { user: null, token: "" }
-  }
 
   async changePassword(currentUser) {
     // console.log(currentUser);

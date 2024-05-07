@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 
 import { User } from "./user.entity";
@@ -14,9 +14,15 @@ export class Enrollment {
     @JoinColumn({ name: "user_id" })
     user: User;
 
+    @Column({ name: 'user_id' })
+    userId: number;
+
     @ManyToOne(() => Course, course => course)
     @JoinColumn({ name: "course_id" })
     course: Course;
+
+    @Column({ name: 'course_id' })
+    courseId: number;
 
 
     @CreateDateColumn({ name: 'enrollment_date' })

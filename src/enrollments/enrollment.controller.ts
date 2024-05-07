@@ -1,6 +1,6 @@
-import { Body, Controller, Patch, Post, Request, UploadedFile, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, UploadedFile, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { AcceptEnrollmentDTO, EnrollmentDTO } from "./dtos/enrollment.dto";
+import { AcceptEnrollmentDTO } from "./dtos/enrollment.dto";
 import { EnrollmentService } from "./enrollment.service";
 import { ApiResult } from "src/common/classes/api-result";
 import { PermissionGuard } from "src/auth/permission.guard";
@@ -10,8 +10,8 @@ import { Role } from "src/types/role.enum";
 import { FileInterceptor } from "@nestjs/platform-express";
 
 @ApiTags("Enrollment Course")
-// @ApiBearerAuth()
-// @UseGuards(AuthGuard)
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @Controller("enrollment")
 export class EnrollmentController {
     constructor(
@@ -45,4 +45,12 @@ export class EnrollmentController {
 
         return new ApiResult().success(result);
     }
+
+    @Get("/course-enrolled-by-user/:id")
+    async getCourseEnrolledByUser(@Param('id') id: number) {
+        const result = await this.enrollmentService.getCourseEnrolledByUser(id);
+
+        return new ApiResult().success(result);
+    }
+
 }

@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { JwtModule } from "@nestjs/jwt";
 import { TypeOrmModule } from "@nestjs/typeorm";
+
 import { Enrollment } from "src/database/models/enrollment.entity";
 import { EnrollmentController } from "./enrollment.controller";
 import { EnrollmentService } from "./enrollment.service";

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import { AcceptEnrollmentDTO, EnrollmentDTO } from "./dtos/enrollment.dto";
@@ -76,7 +76,32 @@ export class EnrollmentService {
             .execute();
 
         const updatedEnrollment = result.raw[0];
+
         return updatedEnrollment;
+    }
+
+    async getCourseEnrolledByUser(id: number) {
+
+        const user = await this.userRepository.findOne({ where: { id: id } })
+
+        if (!user) {
+            throw new ApiError("Not Founded User")
+        }
+
+        const courseId = await this.enrollmentRepository
+            .createQueryBuilder('erm')
+            .select('erm.course_id')
+            .where("user_id = :userId", { userId: id })
+            .andWhere('erm.status_enrollment = :status_accepted', { status_accepted: "ACCEPTED" })
+            .getRawMany();
+
+        const arrayCourseId = courseId.map((value) => {
+            return value["course_id"]
+        })
+
+        return await this.courseRepository.find({
+            where: { course_id: In(arrayCourseId) }
+        })
     }
 
 }
