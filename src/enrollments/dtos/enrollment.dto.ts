@@ -49,3 +49,19 @@ export class AcceptEnrollmentDTO {
 
 
 }
+
+export class GetEnrollmentExist {
+    @IsNotEmpty()
+    @ApiProperty({
+        type: "number",
+        required: true
+    })
+    user_id: number
+
+    @IsNotEmpty()
+    @ApiProperty({
+        type: "number",
+        required: true
+    })
+    course_id: number
+}

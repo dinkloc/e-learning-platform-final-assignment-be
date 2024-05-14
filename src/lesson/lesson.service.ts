@@ -9,7 +9,8 @@ export class LessonService {
         @InjectRepository(Lesson, "ELearning")
         private readonly lessonRepository: Repository<Lesson>
     ) { }
-    async getLessonById() {
-        return this.lessonRepository.find();
+
+    async getLessonById(id: number) {
+        return this.lessonRepository.createQueryBuilder("l").select("l.*").where("l.section_id = :id", { id: id }).orderBy("l.lesson_id", "ASC").getRawMany();
     }
 }

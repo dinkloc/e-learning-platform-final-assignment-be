@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { In, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 
-import { AcceptEnrollmentDTO, EnrollmentDTO } from "./dtos/enrollment.dto";
+import { AcceptEnrollmentDTO, EnrollmentDTO, GetEnrollmentExist } from "./dtos/enrollment.dto";
 import { Enrollment } from "src/database/models/enrollment.entity";
 import { User } from "src/database/models/user.entity";
 import { Course } from "src/database/models/course.entity";
@@ -21,31 +21,56 @@ export class EnrollmentService {
         private readonly courseRepository: Repository<Course>,
         private readonly s3Service: S3Service) { }
 
-    async seedData() {
-        const newUser = this.userRepository.create({ email: "nguyendloc009@gmail.com", password: "Savvycom@1 " })
-        console.log(newUser)
-        await this.userRepository.save(newUser);
+    // async seedData() {
+    //     const newUser = this.userRepository.create({ email: "nguyendloc009@gmail.com", password: "Savvycom@1 " })
+    //     console.log(newUser)
+    //     await this.userRepository.save(newUser);
 
-        const newCourse = this.courseRepository.create({ name: "Clean Code 2024" });
-        await this.courseRepository.save(newCourse);
+    //     const newCourse = this.courseRepository.create({ name: "Clean Code 2024" });
+    //     await this.courseRepository.save(newCourse);
 
-        const newEnroll = this.enrollmentRepository.create({ urlImageStudentCard: "https:google.com" })
-        newEnroll.course = newCourse;
-        newEnroll.user = newUser;
-        await this.enrollmentRepository.save(newEnroll);
+    //     const newEnroll = this.enrollmentRepository.create({ urlImageStudentCard: "https:google.com" })
+    //     newEnroll.course = newCourse;
+    //     newEnroll.user = newUser;
+    //     await this.enrollmentRepository.save(newEnroll);
+    // }
+
+    async getEnrollmentById(getEnrollmentExist: GetEnrollmentExist) {
+        const enrollment = await this.enrollmentRepository.findOneBy({
+            userId: getEnrollmentExist.user_id,
+            courseId: getEnrollmentExist.course_id
+        });
+
+        if (!enrollment) {
+            throw new ApiError("Not Found");
+        }
+
+        return enrollment;
     }
 
+    async enrollCourse(file: any, payload) {
 
-    async enrollCourse(file: any, enrollmentDTO: EnrollmentDTO) {
+        const { userId, courseId } = payload;
 
-        const userEnrollCourse = await this.userRepository.findOne({ where: { id: enrollmentDTO.user_id } })
+        const userEnrollCourse = await this.userRepository.findOne({ where: { id: userId } })
         if (!userEnrollCourse) {
             throw new ApiError("NOT FOUND USER")
         }
 
-        const courseEnroll = await this.courseRepository.findOne({ where: { course_id: enrollmentDTO.course_id } })
+        const courseEnroll = await this.courseRepository.findOne({ where: { course_id: courseId } })
         if (!courseEnroll) {
             throw new ApiError("NOT FOUND COURSE")
+        }
+
+        const enrollExist = await this.enrollmentRepository.find({
+            where: {
+                userId: userId,
+                courseId: courseId
+            }
+        })
+
+        if (enrollExist.length) {
+            throw new ApiError("WAITING ADMIN ACCEPT")
         }
 
         const { Location } = await this.s3Service.uploadFile(file);

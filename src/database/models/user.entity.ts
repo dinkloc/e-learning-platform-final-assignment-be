@@ -14,6 +14,9 @@ import * as bcrypt from 'bcrypt';
 import { Exclude, Transform } from 'class-transformer';
 import * as moment from 'moment';
 import { Enrollment } from './enrollment.entity';
+import { UserProgress } from './user-progress.entity';
+import { Review } from './review.entity';
+import { Discussion } from './discussion.entity';
 
 export enum UserRole {
   ADMIN = 'ADMIN',
@@ -48,6 +51,15 @@ export class User {
 
   @OneToMany(() => Enrollment, enrollment => enrollment.user)
   enrollments: Enrollment[];
+
+  @OneToMany(() => UserProgress, userprogress => userprogress.user)
+  userProgress: UserProgress[];
+
+  @OneToMany(() => Review, review => review.user)
+  review: Review[]
+
+  @OneToMany(() => Discussion, discussion => discussion.user)
+  discussion: Discussion[];
 
   @Column({ length: 100, default: '', nullable: true, name: 'first_name' })
   @ApiProperty()

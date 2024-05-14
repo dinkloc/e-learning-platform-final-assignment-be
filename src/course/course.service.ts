@@ -22,7 +22,7 @@ export class CourseService {
             queryBuilder.getRawMany(),
             queryBuilder.getCount()
         ])
-2
+        2
         return {
             record: result,
             total: count
@@ -34,6 +34,8 @@ export class CourseService {
         if (!course) {
             throw new ApiError("Not Found Course")
         }
+
+        return course;
     }
 
 }
